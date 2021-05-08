@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        :root {
+      --mouse-y: -200px;
+    }
+        html, body, div{
+    padding: 0;
+    margin: 0;
+}
+body{
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+    position: relative;
+    height: 100vh;
+    width: 100vw;
+}
+.container{
+    position: relative;
+    flex-basis: 300px;
+    height: 450px;
+    border: 1px solid grey;
+    border-radius: .5rem;
+    overflow: hidden;
+}
+.slider{
+    position: absolute;
+    width: 100%;
+    height: 200px;
+    background-color: slategray;
+    bottom: var(--mouse-y);
+    border-radius: .5rem;
+}
+.slidintop{
+    animation: slidingTop 1s forwards ease;
+}
+.slidingBottom{
+    animation: slidingBottom 1s forwards ease;
+}
+@keyframes slidingTop {
+    from {
+        bottom: -200px;
+    }
+    to {
+        bottom: 0;
+    }
+}
+@keyframes slidingBottom {
+    to {
+        bottom: -200px;
+        cursor: auto;
+    }
+}
+.handler{
+    width: 200px;
+    height: .75rem;
+    background-color: snow;
+    border-radius: 1rem;
+    margin-top: 1rem;
+    margin-left: auto;
+    margin-right: auto;
+    cursor: pointer;
+}
+button{
+    width: 80%;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    height: 2rem;
+    border: 0;
+    border-radius: .5rem;
+    background-color: steelblue;
+    color: snow;
+    margin: 10%;
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <button onclick="showReport()">report</button>
+        <div class="slider">
+            <div class="handler" ></div>
+        </div>
+    </div>
+    <script>
+        let root = document.documentElement;
+        const slider = document.querySelector('.slider');
+        const handler = document.querySelector('.handler');
+        let isDawn=false;
+        let scrollDrow;
+        let startY;
+        let Yroot =0;
+
+        showReport = () => {
+            slider.classList.add("slidintop")
+            setTimeout(() => {
+                slider.classList.remove("slidintop")
+                root.style.setProperty('--mouse-y',  0  + "px");
+            }, 1000);
+        }
+
+        handler.addEventListener('mousedown', (e)=>{
+            isDawn=true;
+            // console.log(e.pageY-handler.offsetHeight);
+            startY = e.pageY-handler.offsetHeight
+            scrollDrow = handler.scrollHeight
+        })
+        slider.addEventListener('mouseleave', ()=>{
+            isDawn=false;
+            if (Math.abs(parseInt(root.style.getPropertyValue('--mouse-y')))>60) {
+                slider.classList.add("slidingBottom")
+              setTimeout(() => {
+                slider.classList.remove("slidingBottom")
+                root.style.setProperty('--mouse-y',  -200  + "px");
+                }, 1000);
+             } else {
+                root.style.setProperty('--mouse-y',  0 + "px");
+
+             }
+
+              })
+        slider.addEventListener('mouseup', ()=>{
+             isDawn=false;
+             if (Math.abs(parseInt(root.style.getPropertyValue('--mouse-y')))>60) {
+                slider.classList.add("slidingBottom")
+              setTimeout(() => {
+                slider.classList.remove("slidingBottom")
+                root.style.setProperty('--mouse-y',  -200  + "px");
+                }, 1000);
+             } else {
+                root.style.setProperty('--mouse-y',  0 + "px");
+
+             }
+
+
+         })
+        let trans
+        slider.addEventListener('mousemove', (e)=>{
+            if (!isDawn) return;
+            e.preventDefault();
+            Y= e.pageY-handler.offsetHeight
+            console.log(Y+";"+ startY);
+            trans = Yroot - startY -Y
+            console.log(Math.abs(parseInt(root.style.getPropertyValue('--mouse-y')))>60);
+            if ((startY -Y) <0) {
+                root.style.setProperty('--mouse-y',  (startY - Y)  + "px");
+
+            }
+            if (Math.abs(parseInt(root.style.getPropertyValue('--mouse-y')))>80) {
+                slider.classList.add("slidingBottom")
+              setTimeout(() => {
+                slider.classList.remove("slidingBottom")
+                root.style.setProperty('--mouse-y',  -200  + "px");
+                }, 1000);
+            }
+        })
+            a = () => {
+                isDawn =false;
+                slider.classList.add("slidingBottom")
+              setTimeout(() => {
+                slider.classList.remove("slidingBottom")
+                root.style.setProperty('--mouse-y',  -200  + "px");
+            }, 1000);
+            }
+               
+        handler.addEventListener('touchstart', (e)=>{
+            isDawn=true;
+              console.log(e.touches[0].pageY-handler.offsetHeight);
+            startY = e.touches[0].pageY-handler.offsetHeight
+            scrollDrow = handler.scrollHeight
+        })
+        slider.addEventListener('touchend', ()=>{
+            console.log("touchend");
+
+            isDawn=false;
+            console.log(Math.abs(root.style.getPropertyValue('--mouse-y')) >60);
+            if (Math.abs(parseInt(root.style.getPropertyValue('--mouse-y')))>60) {
+                slider.classList.add("slidingBottom")
+              setTimeout(() => {
+                slider.classList.remove("slidingBottom")
+                root.style.setProperty('--mouse-y',  -200  + "px");
+                }, 1000);
+             } else {
+                root.style.setProperty('--mouse-y',  0 + "px");
+
+             }
+
+         })
+        slider.addEventListener('touchcancel', ()=>{
+            console.log("cancel");
+             isDawn=false;
+             if (Math.abs(parseInt(root.style.getPropertyValue('--mouse-y')))>60) {
+                slider.classList.add("slidingBottom")
+              setTimeout(() => {
+                slider.classList.remove("slidingBottom")
+                root.style.setProperty('--mouse-y',  -200  + "px");
+                }, 1000);
+             } else {
+                root.style.setProperty('--mouse-y',  0 + "px");
+
+             }
+
+
+         })
+        slider.addEventListener('touchmove', (e)=>{
+            e.preventDefault();
+
+            if (!isDawn) return;
+             Y= e.touches[0].pageY-handler.offsetHeight
+            if ((startY -Y) <0 ) {
+                root.style.setProperty('--mouse-y',  (startY - Y)  + "px");
+
+            } 
+            if (Math.abs(parseInt(root.style.getPropertyValue('--mouse-y')))>80) {
+                isDawn=false
+                slider.classList.add("slidingBottom")
+              setTimeout(() => {
+                slider.classList.remove("slidingBottom")
+                root.style.setProperty('--mouse-y',  -200  + "px");
+                }, 1000);
+
+            }         
+        })
+
+        console.log(navigator);
+
+    </script>
+</body>
+</html>
